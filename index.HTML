@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>通讯录</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f4f4f9;
+        }
+        .container {
+            max-width: 600px;
+            margin: auto;
+        }
+        h1 {
+            text-align: center;
+        }
+        input[type="text"] {
+            width: calc(100% - 22px);
+            padding: 10px;
+            margin-bottom: 20px;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .contact-card {
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 15px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        .contact-card img {
+            width: 100px; /* Increased size */
+            height: 100px; /* Increased size */
+            border-radius: 50%;
+            margin-right: 20px;
+            object-fit: cover; /* Ensure the image covers the area while maintaining aspect ratio */
+        }
+        .contact-details {
+            flex-grow: 1;
+        }
+        .contact-details strong {
+            display: block;
+            font-size: 1.2em;
+            margin-bottom: 5px;
+        }
+        .contact-details p {
+            margin: 5px 0;
+            color: #555;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>通讯录</h1>
+        <input type="text" id="searchInput" placeholder="搜索联系人...">
+        <div id="contactsContainer"></div>
+    </div>
+
+    <script>
+        const contacts = [
+            { 
+                name: "宋吉裕", 
+                gender: "男", 
+                position: "", 
+                hometown: "棉洋镇富强村", 
+                company: "暂时个体户", 
+                contact: "13723674863", 
+                year: "2020年至今", 
+                industry: "叉车出租", 
+                projects: "装卸, 搬运, 吊装", 
+                wechat: "未知", 
+                other: "希望结识：需要用到出租叉车的老乡", 
+                image: "https://img.alicdn.com/imgextra/i4/O1CN01BpDcFj1GmHtXaE9Rz_!!6000000001072-0-tps-112-112.png" 
+            },
+            { 
+                name: "蓝伟军", 
+                gender: "男", 
+                position: "会员", 
+                hometown: "五华潭下", 
+                company: "顺锻机床维修部", 
+                contact: "15398982048", 
+                year: "2002年至今", 
+                industry: "电力安装、机械维修类", 
+                projects: "五金机电设备维修, 经营机械设备配件, 工厂电力线路安装等", 
+                wechat: "未知", 
+                other: "未知", 
+                image: "https://img.alicdn.com/imgextra/i4/O1CN01BpDcFj1GmHtXaE9Rz_!!6000000001072-0-tps-112-112.png" 
+            },
+            { 
+                name: "李雄丽", 
+                gender: "女", 
+                position: "无", 
+                hometown: "横陂镇锡坑", 
+                company: "广东中冠自动控制设备安装有限公司", 
+                contact: "13727331495", 
+                year: "2019年至今", 
+                industry: "强弱电安装, 土建装修, 智慧工地设备安装服务", 
+                projects: "智慧工地安装服务", 
+                wechat: "未知", 
+                other: "希望结识：建筑公司, 监理公司", 
+                image: "https://img.alicdn.com/imgextra/i4/O1CN01BpDcFj1GmHtXaE9Rz_!!6000000001072-0-tps-112-112.png" 
+            },
+            { 
+                name: "朱妙浩", 
+                gender: "男", 
+                position: "", 
+                hometown: "五华转水", 
+                company: "万和电气股份有限公司", 
+                contact: "13360304138", 
+                year: "1993年至今", 
+                industry: "未知", 
+                projects: "未知", 
+                wechat: "未知", 
+                other: "未知", 
+                image: "https://img.alicdn.com/imgextra/i4/O1CN01BpDcFj1GmHtXaE9Rz_!!6000000001072-0-tps-112-112.png" 
+            },
+            { 
+                name: "张佳柳", 
+                gender: "男", 
+                position: "", 
+                hometown: "五华安流", 
+                company: "吾行养车鸿鹏汽车服务机构", 
+                contact: "13827710446", 
+                year: "2015年至今", 
+                industry: "汽车服务", 
+                projects: "汽车美容, 汽车贴膜车衣改色, 脚垫, 汽车维修保养", 
+                wechat: "未知", 
+                other: "希望结识：资源利用, 对养车用车有需求的老板们可以多多沟通, 多多关照", 
+                image: "https://img.alicdn.com/imgextra/i4/O1CN01BpDcFj1GmHtXaE9Rz_!!6000000001072-0-tps-112-112.png" 
+            },
+            { 
+                name: "魏焕新", 
+                gender: "男", 
+                position: "", 
+                hometown: "五华横陂", 
+                company: "广州南沙机电商行", 
+                contact: "15989018101", 
+                year: "2016年至今", 
+                industry: "五金机电", 
+                projects: "维修电机, 机电五金批发", 
+                wechat: "未知", 
+                other: "希望结识：工厂, 工地, 船舶等各种与机电五金相关的", 
+                image: "https://img.alicdn.com/imgextra/i4/O1CN01BpDcFj1GmHtXaE9Rz_!!6000000001072-0-tps-112-112.png" 
+            },
+            { 
+                name: "魏阳雄", 
+                gender: "男", 
+                position: "理事", 
+                hometown: "五华县横陂镇近江村", 
+                company: "广东顺德航安办公设备有限公司", 
+                contact: "13528919280", 
+                year: "2010年至今", 
+                industry: "智能办公设备领域", 
+                projects: "租赁销售维修复印机、打印机、电脑服务器、网络工程, 企业办公设备配套供应商", 
+                wechat: "未知", 
+                other: "希望结识：办公设备有需求的、互利共赢、共同致富", 
+                image: "https://img.alicdn.com/imgextra/i4/O1CN01BpDcFj1GmHtXaE9Rz_!!6000000001072-0-tps-112-112.png" 
+            },
+            { 
+                name: "胡美珍", 
+                gender: "女", 
+                position: "会员", 
+                hometown: "五华安流", 
+                company: "顺德容桂胡美珍口腔诊所", 
+                contact: "18025958332", 
+                year: "1996年至今", 
+                industry: "医疗", 
+                projects: "口腔门诊", 
+                wechat: "未知", 
+                other: "希望结识：正能量, 积极向上, 有爱心的老乡", 
+                image: "https://img.alicdn.com/imgextra/i4/O1CN01BpDcFj1GmHtXaE9Rz_!!6000000001072-0-tps-112-112.png" 
+            },
+            { 
+                name: "刘国强", 
+                gender: "男", 
+                position: "会员", 
+                hometown: "五华郭田", 
+                company: "环球电脑学校", 
+                contact: "18923292615", 
+                year: "2003.7年至今", 
+                industry: "教育培训", 
+                projects: "Creo产品设计, UG模具设计, CNC数控编程, SW机械设计, 平面广告设计, 电商美工设计, AIGC人工智能设计, 财务会计真帐, 会计师证, office/wps商务文秘办公, PowerBI数据分析, 成人中专, 大专, 本科学历, 职业技能等级证书, 企业技能和办公内训", 
+                wechat: "未知", 
+                other: "未知", 
+                image: "https://south.airportal.cn/879008/fPZLoHHCBY/1/AgAACEFsgRYOKwS9FTJIUI00hsyt7i_N.jpeg?OSSAccessKeyId=STS.NUPb2BeuaFJ5k5zLibFtFMqzb&Expires=1739254216&Signature=jL2YS5IbrQfAg1%2FHmJko6UcOMk0%3D&response-cache-control=max-age%3D121&response-content-type=&security-token=CAISjgN1q6Ft5B2yfSjIr5blKYj2iKpA8YjeaRPLqGk3SvtqorTRgDz2IHFPfHJgAeAatf0%2Bn2hU6fwTlqp6U4cd1oNHmGwqvPpt6gqET9frXqXXhOV2Z%2FTHdEGXDxnkpp%2BwB8zyUNLafNq0dlnAjVUd6LDmdDKkLRTHVJqSksxIY8gwVAu1ZiYkY9BNPVlGqdQGEnHTOP2xKWTG4AzqAVFvpxB3hE5m9K272bf80BfFi0DgweJn5%2Ba%2FK5O%2FPc53J8U9AZXn1e1sbq3bzCdUrhNMsbxxkbBEvmeY74nFUxtzm0zaa7aMqI0%2BcVQgOvVgQP5%2BwaKixaEiiIv6jJ%2FqzhtBB%2BZRXhnESZqoqMm%2BQ7Lybo1pLeanYC2ciYjTacOkqXAtZXMKKQVNYME9LXx9DxMhTDzAI7Og4krNZgqztR9rAAbABvCfpnefHrriTzDnK93xWpbNoRjI9G0Cg78HD8GQk76HAu29SSkTI5y%2FY0tdEv5wx20mQ4PceNPOQN8p3ZncI8eykMR5ze2AiNs1j%2BJ1DBqAAZHWahvpj%2BR4DqKV8TcVaP5TZfKtFp36efJAyUNcH8dENArR3uJQOwo%2Bz1%2FI%2Fka0nCtTZpit9tzLUqk7b6ahh2YOankUJf4Ov7O77Q2RTMw5i21FDyh%2BFHezp7wEkuJqPfqlDkNhZ%2BW7fNzrbEg9EDh3mgNfa1%2BoZwwt41eHjJgxIAA%3D" 
+            },
+            { 
+                name: "廖景军", 
+                gender: "男", 
+                position: "", 
+                hometown: "未知", 
+                company: "未知", 
+                contact: "18125362915", 
+                year: "2000年来中山", 
+                industry: "职业司机", 
+                projects: "开旅游大巴", 
+                wechat: "未知", 
+                other: "未知", 
+                image: "https://img.alicdn.com/imgextra/i4/O1CN01BpDcFj1GmHtXaE9Rz_!!6000000001072-0-tps-112-112.png" 
+            }
+        ];
+
+        function renderContacts(filteredContacts) {
+            const container = document.getElementById('contactsContainer');
+            container.innerHTML = '';
+            filteredContacts.forEach(contact => {
+                const card = document.createElement('div');
+                card.className = 'contact-card';
+                card.innerHTML = `
+                    <img src="${contact.image}" alt="${contact.name}">
+                    <div class="contact-details">
+                        <strong>${contact.name}</strong>
+                        <p>性别: ${contact.gender}</p>
+                        <p>容桂分会职务: ${contact.position}</p>
+                        <p>老家: ${contact.hometown}</p>
+                        <p>公司名称: ${contact.company}</p>
+                        <p>联系方式: ${contact.contact}</p>
+                        <p>容桂年份: ${contact.year}</p>
+                        <p>所在行业: ${contact.industry}</p>
+                        <p>经营项目: ${contact.projects}</p>
+                        <p>微信: ${contact.wechat}</p>
+                        <p>其他: ${contact.other}</p>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        function searchContacts(query) {
+            return contacts.filter(contact =>
+                contact.name.toLowerCase().includes(query.toLowerCase()) ||
+                contact.gender.toLowerCase().includes(query.toLowerCase()) ||
+                contact.position.toLowerCase().includes(query.toLowerCase()) ||
+                contact.hometown.toLowerCase().includes(query.toLowerCase()) ||
+                contact.company.toLowerCase().includes(query.toLowerCase()) ||
+                contact.contact.includes(query) ||
+                contact.year.includes(query) ||
+                contact.industry.toLowerCase().includes(query.toLowerCase()) ||
+                contact.projects.toLowerCase().includes(query.toLowerCase()) ||
+                contact.wechat.toLowerCase().includes(query.toLowerCase()) ||
+                contact.other.toLowerCase().includes(query.toLowerCase())
+            );
+        }
+
+        document.getElementById('searchInput').addEventListener('input', (event) => {
+            const query = event.target.value;
+            const filteredContacts = searchContacts(query);
+            renderContacts(filteredContacts);
+        });
+
+        // Initial rendering
+        renderContacts(contacts);
+    </script>
+</body>
+</html>
+
+
+
